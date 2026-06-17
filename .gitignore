@@ -1,0 +1,9 @@
+# venv
+venv
+.venv
+# log
+*.log
+# files
+# data base
+*.db
+*.sqlite3

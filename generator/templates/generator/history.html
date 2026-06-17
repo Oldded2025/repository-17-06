@@ -1,0 +1,54 @@
+{% extends "generator/base.html" %}
+
+{% block title %}История паролей{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>История паролей</h2>
+        {% if passwords %}
+        <form method="post" action="{% url 'generator:clear_history' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background: #ff6b6b;"
+                    onclick="return confirm('Очистить историю?')">
+                Очистить
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    {% if passwords %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Пароль</th>
+                <th>Длина</th>
+                <th>Настройки</th>
+                <th>Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in passwords %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><code>{{ item.password }}</code></td>
+                <td>{{ item.length }}</td>
+                <td>
+                    {% if item.use_lowercase %}<span class="badge badge-success">a-z</span>{% endif %}
+                    {% if item.use_uppercase %}<span class="badge badge-success">A-Z</span>{% endif %}
+                    {% if item.use_digits %}<span class="badge badge-success">0-9</span>{% endif %}
+                    {% if item.use_symbols %}<span class="badge badge-success">!@#$</span>% endif %}
+                </td>
+                <td>{{ item.created_at|date:"d.m.Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 40px; color: #6c757d;">
+        История пуста. <a href="{% url 'generator:index' %}">Сгенерируйте пароль!</a>
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

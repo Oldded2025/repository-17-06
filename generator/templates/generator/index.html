@@ -1,0 +1,69 @@
+{% extends "generator/base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 20px;">Настройка пароля</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="length">Длина пароля</label>
+            <input type="number" id="length" name="length"
+                   value="{{ length }}" min="4" max="128" required>
+        </div>
+
+        <div class="form-group">
+            <label>Набор символов</label>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" name="lowercase" checked>
+                    <span>Строчные буквы (a-z)</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="uppercase" checked>
+                    <span>Заглавные буквы (A-Z)</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="digits" checked>
+                    <span>Цифры (0-9)</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="symbols">
+                    <span>Спецсимволы (!@#$%^&*)</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" name="exclude_ambiguous">
+                    <span>Исключить неоднозначные (I, l, 1, O, 0)</span>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn">Сгенерировать пароль</button>
+    </form>
+
+    {% if password %}
+    <div class="password-result">
+        <h3>Ваш пароль:</h3>
+        <div class="password-text" id="password-text">{{ password }}</div>
+        <button class="btn" style="margin-top: 15px;" onclick="copyPassword()">
+            Копировать
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function copyPassword() {
+    const password = document.getElementById('password-text').textContent;
+    navigator.clipboard.writeText(password).then(() => {
+        alert('Пароль скопирован!');
+    });
+}
+</script>
+{% endblock %}
